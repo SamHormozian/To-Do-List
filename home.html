@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <title> Sam's To-Do List</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        #taskInput {
+            width: 300px;
+            padding: 10px;
+        }
+
+        #addButton {
+            margin-top: 10px;
+            padding: 10px;
+        }
+
+        #taskList,
+        #inProgressList,
+        #completeList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .taskItem,
+        .inProgressItem,
+        .completeItem {
+            margin-bottom: 5px;
+        }
+
+        .taskItem button,
+        .inProgressItem button,
+        .completeItem button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body style="background-color:grey;">
+    <h1>To-Do List</h1>
+    <input type="text" id="taskInput" placeholder="Enter a task">
+    <button id="addButton">Add Task</button>
+
+    <h2>Tasks</h2>
+    <ul style="background-color:green;" id="taskList"></ul>
+
+    <h2>In Progress</h2>
+    <ul style="background-color:red;" id="inProgressList"></ul>
+
+    <h2>Complete</h2>
+    <ul style="background-color:blue;" id="completeList"></ul>
+
+    <script>
+        const taskInput = document.getElementById('taskInput');
+        const addButton = document.getElementById('addButton');
+        const taskList = document.getElementById('taskList');
+        const inProgressList = document.getElementById('inProgressList');
+        const completeList = document.getElementById('completeList');
+
+        addButton.addEventListener('click', addTask);
+
+        function addTask() {
+            const taskText = taskInput.value.trim();
+
+            if (taskText !== '') {
+                const taskItem = createTaskItem(taskText);
+                taskList.appendChild(taskItem);
+
+                taskInput.value = '';
+            }
+        }
+
+        function createTaskItem(text) {
+            const taskItem = document.createElement('li');
+            taskItem.className = 'taskItem';
+
+            const taskTextElement = document.createElement('span');
+            taskTextElement.innerText = text;
+
+            const inProgressButton = document.createElement('button');
+            inProgressButton.innerText = 'In Progress';
+            inProgressButton.addEventListener('click', moveTaskInProgress);
+
+            taskItem.appendChild(taskTextElement);
+            taskItem.appendChild(inProgressButton);
+
+            return taskItem;
+        }
+
+        function moveTaskInProgress(event) {
+            const taskItem = event.target.parentNode;
+            const taskText = taskItem.firstChild.innerText;
+
+            const inProgressItem = createInProgressItem(taskText);
+            inProgressList.appendChild(inProgressItem);
+
+            taskList.removeChild(taskItem);
+        }
+
+        function createInProgressItem(text) {
+            const inProgressItem = document.createElement('li');
+            inProgressItem.className = 'inProgressItem';
+
+            const taskTextElement = document.createElement('span');
+            taskTextElement.innerText = text;
+
+            const completeButton = document.createElement('button');
+            completeButton.innerText = 'Complete';
+            completeButton.addEventListener('click', moveTaskComplete);
+
+            inProgressItem.appendChild(taskTextElement);
+            inProgressItem.appendChild(completeButton);
+
+            return inProgressItem;
+        }
+
+        function moveTaskComplete(event) {
+            const inProgressItem = event.target.parentNode;
+            const taskText = inProgressItem.firstChild.innerText;
+
+            const completeItem = createCompleteItem(taskText);
+            completeList.appendChild(completeItem);
+
+            inProgressList.removeChild(inProgressItem);
+        }
+
+        function createCompleteItem(text) {
+            const completeItem = document.createElement('li');
+            completeItem.className = 'completeItem';
+
+            const taskTextElement = document.createElement('span');
+            taskTextElement.innerText = text;
+
+            completeItem.appendChild(taskTextElement);
+
+            return completeItem;
+        }
+    </script>
+</body>
+</html>
